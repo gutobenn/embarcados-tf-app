@@ -20,6 +20,15 @@
         android:layout_below="@+id/imageView"
         android:text="Carregar Compras" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/button"
+        android:onClick="newCompra"
+        android:text="Nova" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

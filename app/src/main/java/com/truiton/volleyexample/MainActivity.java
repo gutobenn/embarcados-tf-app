@@ -62,8 +62,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
         mTextView = (TextView) findViewById(R.id.textView);
         mButton = (Button) findViewById(R.id.button);
-        mButton2 = (Button) findViewById(R.id.button);
-
+        mButton2 = (Button) findViewById(R.id.button2);
     }
 
     @Override
@@ -141,5 +140,9 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         }
     }
 
+    public void newCompra(View view) {
+        Intent intent = new Intent(this, newCompraActivity.class);
+        startActivity(intent);
+    }
 
 }
