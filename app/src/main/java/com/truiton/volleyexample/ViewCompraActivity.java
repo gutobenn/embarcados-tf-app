@@ -20,9 +20,9 @@
 
 package com.truiton.volleyexample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -35,20 +35,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainVolleyActivity extends AppCompatActivity implements Response.Listener,
+public class ViewCompraActivity extends AppCompatActivity implements Response.Listener,
         Response.ErrorListener {
-    public static final String REQUEST_TAG = "MainVolleyActivity";
+    public static final String REQUEST_TAG = "ViewCompraActivity";
     private TextView mTextView;
+    private TextView mName;
+    private TextView mDescription;
     private Button mButton;
     private RequestQueue mQueue;
+    private String compraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_volley);
+        setContentView(R.layout.activity_view_compra);
 
         mTextView = (TextView) findViewById(R.id.textView);
-        mButton = (Button) findViewById(R.id.button);
+        mName = (TextView) findViewById(R.id.name);
+        mDescription = (TextView) findViewById(R.id.description);
+
+        // Get the Intent that started this activity and extract the string
+        Intent intent = getIntent();
+        compraId = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
     }
 
     @Override
@@ -57,18 +65,13 @@ public class MainVolleyActivity extends AppCompatActivity implements Response.Li
         // Instantiate the RequestQueue.
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
-        String url = "http://api.openweathermap.org/data/2.5/weather?q=London,uk";
+        String url = "https://ccapi.florescer.xyz/api/v1/compras/" + compraId + ".json";
         final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method
                 .GET, url,
                 new JSONObject(), this, this);
         jsonRequest.setTag(REQUEST_TAG);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mQueue.add(jsonRequest);
-            }
-        });
+        mQueue.add(jsonRequest);
     }
 
     @Override
@@ -88,8 +91,10 @@ public class MainVolleyActivity extends AppCompatActivity implements Response.Li
     public void onResponse(Object response) {
         mTextView.setText("Response is: " + response);
         try {
-            mTextView.setText(mTextView.getText() + "\n\n" + ((JSONObject) response).getString
+            mName.setText(mName.getText() + "\n\n" + ((JSONObject) response).getString
                     ("name"));
+            mDescription.setText(mDescription.getText() + "\n\n" + ((JSONObject) response).getString
+                    ("description"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
