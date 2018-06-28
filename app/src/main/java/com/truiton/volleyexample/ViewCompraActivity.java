@@ -65,7 +65,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         // Instantiate the RequestQueue.
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
-        String url = "https://ccapi.florescer.xyz/api/v1/compras/" + compraId + ".json";
+        String url = "https://ccapi.florescer.xyz/api/v1/compras/" + compraId;
         final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method
                 .GET, url,
                 new JSONObject(), this, this);
@@ -91,9 +91,9 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     public void onResponse(Object response) {
         mTextView.setText("Response is: " + response);
         try {
-            mName.setText(mName.getText() + "\n\n" + ((JSONObject) response).getString
+            mName.setText(((JSONObject) response).getString
                     ("name"));
-            mDescription.setText(mDescription.getText() + "\n\n" + ((JSONObject) response).getString
+            mDescription.setText(((JSONObject) response).getString
                     ("description"));
         } catch (JSONException e) {
             e.printStackTrace();

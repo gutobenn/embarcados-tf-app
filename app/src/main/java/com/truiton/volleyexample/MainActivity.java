@@ -24,7 +24,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -32,8 +35,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.layout.simple_list_item_1;
 
 
 public class MainActivity extends AppCompatActivity implements Response.Listener,
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private Button mButton;
     private Button mButton2;
     private RequestQueue mQueue;
+    List<Compra> compras = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +63,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         mTextView = (TextView) findViewById(R.id.textView);
         mButton = (Button) findViewById(R.id.button);
         mButton2 = (Button) findViewById(R.id.button);
-    }
 
-    /** Called when the user taps the Send button */
-    public void openCompra(View view) {
-        Intent intent = new Intent(this, ViewCompraActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "1");
-        startActivity(intent);
     }
-
 
     @Override
     protected void onStart() {
@@ -69,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         // Instantiate the RequestQueue.
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
-        String url = "https://ccapi.florescer.xyz/api/v1/compras/1.json";
-        final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method
+        String url = "https://ccapi.florescer.xyz/api/v1/compras";
+        final CustomJSONArrayRequest jsonRequest = new CustomJSONArrayRequest(Request.Method
                 .GET, url,
-                new JSONObject(), this, this);
+                new JSONArray(), this, this);
         jsonRequest.setTag(REQUEST_TAG);
 
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -98,12 +101,45 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     @Override
     public void onResponse(Object response) {
-        mTextView.setText("Response is: " + response);
+        //mTextView.setText("Response is: " + response);
+        compras.clear();
         try {
-            mTextView.setText(mTextView.getText() + "\n\n" + ((JSONObject) response).getString
-                    ("name"));
-        } catch (JSONException e) {
+            for (int i = 0; i < ((JSONArray) response).length(); i++) {
+                try {
+                    JSONObject jo = ((JSONArray) response).getJSONObject(i);
+                    compras.add(
+                            new Compra(
+                                Integer.parseInt(((JSONObject) jo).getString("id")),
+                                ((JSONObject) jo).getString("name")
+                            ));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            ListView listaDeCompras = (ListView) findViewById(R.id.listCompras);
+
+            ArrayAdapter<Compra> adapter = new ArrayAdapter<Compra>(this,
+                    simple_list_item_1, compras);
+
+            listaDeCompras.setAdapter(adapter);
+
+            listaDeCompras.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position,
+                                        long id) {
+
+                    //String item = ((TextView)view).getText().toString();
+                    String item = Integer.toString(compras.get(position).getId());
+
+                    Intent intent = new Intent(MainActivity.this, ViewCompraActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, item);
+                    startActivity(intent);
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
 }
