@@ -56,7 +56,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        compraId = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        compraId = intent.getStringExtra(MainActivity.ID_TO_VIEW_MSG);
     }
 
     @Override

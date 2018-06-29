@@ -47,11 +47,10 @@ import static android.R.layout.simple_list_item_1;
 
 public class MainActivity extends AppCompatActivity implements Response.Listener,
         Response.ErrorListener {
-    public static final String EXTRA_MESSAGE = "com.truiton.volleyexample.MESSAGE";
+    public static final String ID_TO_VIEW_MSG = "com.truiton.volleyexample.ID_TO_VIEW_MSG";
     public static final String REQUEST_TAG = "MainActivity";
     private TextView mTextView;
     private Button mButton;
-    private Button mButton2;
     private RequestQueue mQueue;
     List<Compra> compras = new ArrayList<>();
 
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
         mTextView = (TextView) findViewById(R.id.textView);
         mButton = (Button) findViewById(R.id.button);
-        mButton2 = (Button) findViewById(R.id.button2);
     }
 
     @Override
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                     String item = Integer.toString(compras.get(position).getId());
 
                     Intent intent = new Intent(MainActivity.this, ViewCompraActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, item);
+                    intent.putExtra(ID_TO_VIEW_MSG, item);
                     startActivity(intent);
                 }
             });

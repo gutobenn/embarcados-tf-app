@@ -25,13 +25,16 @@
         <activity
             android:name=".ViewCompraActivity"
             android:label="@string/title_activity_view_compra"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"
+                android:theme="@style/AppTheme.NoActionBar"/>
         </activity>
-        <activity android:name=".newCompraActivity"></activity>
+        <activity
+            android:name=".newCompraActivity"
+            android:label="@string/title_activity_new_compra">
+        </activity>
     </application>
 
 </manifest>
