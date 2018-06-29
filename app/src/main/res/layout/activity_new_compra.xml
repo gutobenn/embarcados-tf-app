@@ -134,6 +134,28 @@
                 android:inputType="datetime" />
         </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Endereço de Retirada *:" />
+
+            <EditText
+                android:id="@+id/addressField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ems="10"
+                android:inputType="text" />
+        </TableRow>
+
+        <Button android:text="Button" android:id="@+id/btn"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+
         <Button
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
@@ -145,7 +167,6 @@
             android:textColor="#ffffff"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="209dp" />
-
     </LinearLayout>
 
     <TextView
@@ -154,5 +175,6 @@
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="302dp" />
+
 
 </android.support.constraint.ConstraintLayout>

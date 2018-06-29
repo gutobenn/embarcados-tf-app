@@ -1,12 +1,17 @@
 package com.truiton.volleyexample;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +30,8 @@ import java.util.Map;
 public class newCompraActivity extends AppCompatActivity {
     public static final String ID_TO_VIEW_MSG = "com.truiton.volleyexample.ID_TO_VIEW_MSG";
     public static final String REQUEST_TAG = "newCompraActivity";
+    static final int DATE_DIALOG_ID = 0;
+
     private TextView mName;
     private TextView mDescription;
     private TextView mMinQuota;
@@ -32,13 +39,23 @@ public class newCompraActivity extends AppCompatActivity {
     private TextView mPriceQuota;
     private TextView mTextView;
     private TextView mEnd;
+    private TextView mAddress;
     private Button mButton;
     private RequestQueue mQueue;
+    private Button botao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_compra);
+
+        botao = (Button) findViewById(R.id.btn);
+        botao.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v == botao)
+                    showDialog(DATE_DIALOG_ID);
+            }
+        });
 
         mName = (TextView) findViewById(R.id.nameField);
         mDescription = (TextView) findViewById(R.id.descriptionField);
@@ -46,6 +63,7 @@ public class newCompraActivity extends AppCompatActivity {
         mMaxQuota = (TextView) findViewById(R.id.maxQuotaField);
         mPriceQuota = (TextView) findViewById(R.id.priceQuotaField);
         mEnd = (TextView) findViewById(R.id.endField);
+        mAddress = (TextView) findViewById(R.id.addressField);
         mButton = (Button) findViewById(R.id.submitButton);
         mTextView = (TextView) findViewById(R.id.result);
     }
@@ -66,6 +84,10 @@ public class newCompraActivity extends AppCompatActivity {
             mEnd.setError("Campo obrigatório");
             result = false;
         }
+        if( TextUtils.isEmpty(mAddress.getText())) {
+            mAddress.setError("Campo obrigatório");
+            result = false;
+        }
         return result;
     }
 
@@ -83,6 +105,7 @@ public class newCompraActivity extends AppCompatActivity {
                 jsonParams.put("min_number_of_quotas", mMinQuota.getText().toString());
                 jsonParams.put("max_number_of_quotas", mMaxQuota.getText().toString());
                 jsonParams.put("price_per_quota", mPriceQuota.getText().toString());
+                jsonParams.put("address", mAddress.getText().toString());
                 jsonParams.put("end", mEnd.getText().toString());
                 jsonParams.put("status", "1");
             } catch (Exception e) {
@@ -110,4 +133,32 @@ public class newCompraActivity extends AppCompatActivity {
             mQueue.add(sr);
         }
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Calendar calendario = Calendar.getInstance();
+
+        int ano = calendario.get(Calendar.YEAR);
+        int mes = calendario.get(Calendar.MONTH);
+        int dia = calendario.get(Calendar.DAY_OF_MONTH);
+
+        switch (id) {
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(this, mDateSetListener, ano, mes,
+                        dia);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    String data = String.valueOf(dayOfMonth) + " /"
+                            + String.valueOf(monthOfYear+1) + " /" + String.valueOf(year);
+                    Toast.makeText(newCompraActivity.this,
+                            "DATA = " + data, Toast.LENGTH_SHORT)
+                            .show();
+                }
+            };
 }

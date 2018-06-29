@@ -21,7 +21,10 @@
 package com.truiton.volleyexample;
 
 import android.content.Intent;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,13 +37,18 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 
 public class ViewCompraActivity extends AppCompatActivity implements Response.Listener,
         Response.ErrorListener {
     public static final String REQUEST_TAG = "ViewCompraActivity";
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mTextView;
-    private TextView mName;
+    private TextView mPriceQuota;
     private TextView mDescription;
+    private TextView mUser;
+    private TextView mEnd;
     private Button mButton;
     private RequestQueue mQueue;
     private String compraId;
@@ -51,8 +59,11 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         setContentView(R.layout.activity_view_compra);
 
         mTextView = (TextView) findViewById(R.id.textView);
-        mName = (TextView) findViewById(R.id.name);
         mDescription = (TextView) findViewById(R.id.description);
+        mPriceQuota = (TextView) findViewById(R.id.priceQuota);
+        mUser = (TextView) findViewById(R.id.user);
+        mEnd = (TextView) findViewById(R.id.end);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -72,6 +83,14 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         jsonRequest.setTag(REQUEST_TAG);
 
         mQueue.add(jsonRequest);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mQueue.add(jsonRequest);
+                mSwipeRefreshLayout.setRefreshing(false); // TODO na real nao ta no lugar certo acho, mas visualmente até parece que funciona
+            }
+        });
     }
 
     @Override
@@ -89,13 +108,17 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
 
     @Override
     public void onResponse(Object response) {
-        mTextView.setText("Response is: " + response);
         try {
-            mName.setText(((JSONObject) response).getString
-                    ("name"));
+            setTitle(((JSONObject) response).getString("name"));
             mDescription.setText(((JSONObject) response).getString
                     ("description"));
-        } catch (JSONException e) {
+            mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getString
+                    ("price_per_quota"))));
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            Date endDate = dateFormat.parse(((JSONObject) response).getString(
+                    ("end")));
+            mEnd.setText(endDate.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
