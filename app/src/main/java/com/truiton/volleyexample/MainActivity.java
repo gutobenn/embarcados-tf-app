@@ -22,6 +22,7 @@ package com.truiton.volleyexample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -49,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         Response.ErrorListener {
     public static final String ID_TO_VIEW_MSG = "com.truiton.volleyexample.ID_TO_VIEW_MSG";
     public static final String REQUEST_TAG = "MainActivity";
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mTextView;
-    private Button mButton;
     private RequestQueue mQueue;
     List<Compra> compras = new ArrayList<>();
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         setContentView(R.layout.activity_main);
 
         mTextView = (TextView) findViewById(R.id.textView);
-        mButton = (Button) findViewById(R.id.button);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
     }
 
     @Override
@@ -75,10 +76,13 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 new JSONArray(), this, this);
         jsonRequest.setTag(REQUEST_TAG);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+        mQueue.add(jsonRequest);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
+            public void onRefresh() {
                 mQueue.add(jsonRequest);
+                mSwipeRefreshLayout.setRefreshing(false); // TODO na real nao ta no lugar certo acho, mas visualmente até parece que funciona
             }
         });
     }
@@ -93,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        mTextView.setText(error.getMessage());
+        //mTextView.setText(error.getMessage());
     }
 
     @Override
