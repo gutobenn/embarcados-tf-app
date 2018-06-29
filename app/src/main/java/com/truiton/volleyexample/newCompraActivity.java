@@ -84,6 +84,7 @@ public class newCompraActivity extends AppCompatActivity {
                 jsonParams.put("max_number_of_quotas", mMaxQuota.getText().toString());
                 jsonParams.put("price_per_quota", mPriceQuota.getText().toString());
                 jsonParams.put("end", mEnd.getText().toString());
+                jsonParams.put("status", "1");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -94,6 +95,7 @@ public class newCompraActivity extends AppCompatActivity {
                         Intent intent = new Intent(newCompraActivity.this, ViewCompraActivity.class);
                         intent.putExtra(ID_TO_VIEW_MSG, ((JSONObject) response).getString("id"));
                         startActivity(intent);
+                        finish(); // proibe de voltar para essa activity ao apertar o botao de retorno
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
