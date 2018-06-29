@@ -20,6 +20,7 @@
 
 package com.truiton.volleyexample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
@@ -27,13 +28,17 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +57,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private Button mButton;
     private RequestQueue mQueue;
     private String compraId;
+    private ImageView mPicture;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mUser = (TextView) findViewById(R.id.user);
         mEnd = (TextView) findViewById(R.id.end);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mPicture = (ImageView) findViewById(R.id.picture);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -118,6 +126,14 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             Date endDate = dateFormat.parse(((JSONObject) response).getString(
                     ("end")));
             mEnd.setText(endDate.toString());
+
+            JSONObject picEl = (JSONObject) ((JSONObject) response).get("picture");
+            String imgPath = picEl.getString("url");
+            if (imgPath != "null") {
+                String url = "https://ccapi.florescer.xyz" + imgPath;
+                Toast.makeText(ViewCompraActivity.this, ((CharSequence) url), Toast.LENGTH_LONG).show();
+                GlideApp.with(ViewCompraActivity.this).load(url).into(mPicture);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

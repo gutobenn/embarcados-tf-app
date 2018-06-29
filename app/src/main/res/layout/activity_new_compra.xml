@@ -153,8 +153,23 @@
                 android:inputType="text" />
         </TableRow>
 
-        <Button android:text="Button" android:id="@+id/btn"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imagem:" />
+
+            <Button
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="selectImage"
+                android:text="Selecionar imagem" />
+        </TableRow>
 
         <Button
             android:id="@+id/submitButton"
@@ -167,6 +182,12 @@
             android:textColor="#ffffff"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="209dp" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"></Button>
     </LinearLayout>
 
     <TextView

@@ -1,18 +1,24 @@
 package com.truiton.volleyexample;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.icu.util.Calendar;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,11 +30,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class newCompraActivity extends AppCompatActivity {
     public static final String ID_TO_VIEW_MSG = "com.truiton.volleyexample.ID_TO_VIEW_MSG";
+    public static final int GET_FROM_GALLERY = 3;
     public static final String REQUEST_TAG = "newCompraActivity";
     static final int DATE_DIALOG_ID = 0;
 
@@ -43,6 +53,7 @@ public class newCompraActivity extends AppCompatActivity {
     private Button mButton;
     private RequestQueue mQueue;
     private Button botao;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,8 @@ public class newCompraActivity extends AppCompatActivity {
         mAddress = (TextView) findViewById(R.id.addressField);
         mButton = (Button) findViewById(R.id.submitButton);
         mTextView = (TextView) findViewById(R.id.result);
+
+        bitmap = null;
     }
     protected boolean fieldsAreValid(){
         boolean result = true;
@@ -100,6 +113,13 @@ public class newCompraActivity extends AppCompatActivity {
             JSONObject jsonParams = new JSONObject();
 
             try {
+                if (bitmap != null) {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream);
+                    String encodedImage = "data:image/jpeg;base64," + Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+                    //jsonParams.put('imagename', etxtUpload.getText().toString().trim());
+                    jsonParams.put("picture", encodedImage);
+                };
                 jsonParams.put("name", mName.getText().toString());
                 jsonParams.put("description", mDescription.getText().toString());
                 jsonParams.put("min_number_of_quotas", mMinQuota.getText().toString());
@@ -128,9 +148,36 @@ public class newCompraActivity extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     mTextView.setText("Erro ao cadastrar");
                 }
-            });
+            }); // TODO Toast?
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(5000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             mQueue.add(sr);
+        }
+    }
+
+    public void selectImage(View v){
+        startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Detects request codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 

@@ -19,10 +19,18 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.google.com' }
+}
+
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.android.volley:volley:1.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     compile 'com.android.support:design:27.1.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compile 'com.android.support:support-v4:27.1.1'
 }
