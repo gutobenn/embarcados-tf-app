@@ -62,6 +62,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.R.layout.simple_list_item_1;
@@ -70,6 +71,7 @@ import static android.R.layout.simple_list_item_1;
 public class MainActivity extends AppCompatActivity implements Response.Listener,
         Response.ErrorListener {
     public static final String ID_TO_VIEW_MSG = "com.truiton.volleyexample.ID_TO_VIEW_MSG";
+    public static final String ID_DISTANCE = "com.truiton.volleyexample.ID_DISTANCE";
     public static final String REQUEST_TAG = "MainActivity";
     SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mTextView;
@@ -83,9 +85,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     private Float radius;
 
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private Location currentBestLocation = null;
+    private Location currentLocation;
 
     private GpsTracker gpsTracker;
 
@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate: starting.");
+
+        currentLocation = new Location("user location");
 
         mTextView = (TextView) findViewById(R.id.textView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
@@ -139,11 +141,6 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                                     e.printStackTrace();
                                 }
 
-                                //LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                                //@SuppressLint("MissingPermission") Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                //longitude = location.getLongitude();
-                                //latitude = location.getLatitude();
                                 getLocation();
                                 try {
                                     Log.d("MainActivity", Float.toString(radius));
@@ -207,7 +204,19 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     @Override
     protected void onStart() {
         super.onStart();
+
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(mActivity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        getLocation();
+
         loadCompras();
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -238,15 +247,24 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
             for (int i = 0; i < ((JSONArray) response).length(); i++) {
                 try {
                     JSONObject jo = ((JSONArray) response).getJSONObject(i);
+                    Location compraDistance = new Location("retirada");
+                    compraDistance.setLatitude(Float.parseFloat(((JSONObject) jo).getString("latitude")));
+                    compraDistance.setLongitude(Float.parseFloat(((JSONObject) jo).getString("longitude")));
+
+                    float distance = currentLocation.distanceTo(compraDistance) / 1000; // in km
+                    Log.e("distanciaa", Float.toString(distance));
+
                     compras.add(
                             new Compra(
                                 Integer.parseInt(((JSONObject) jo).getString("id")),
-                                ((JSONObject) jo).getString("name")
+                                ((JSONObject) jo).getString("name"),
+                                distance
                             ));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            Collections.sort(compras);
             ListView listaDeCompras = (ListView) findViewById(R.id.listCompras);
 
             ArrayAdapter<Compra> adapter = new ArrayAdapter<Compra>(this,
@@ -261,9 +279,11 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
                     //String item = ((TextView)view).getText().toString();
                     String item = Integer.toString(compras.get(position).getId());
+                    String itemDistance = String.format("%.1f", compras.get(position).getDistance());
 
                     Intent intent = new Intent(MainActivity.this, ViewCompraActivity.class);
                     intent.putExtra(ID_TO_VIEW_MSG, item);
+                    intent.putExtra(ID_DISTANCE, itemDistance);
                     startActivity(intent);
                 }
             });
@@ -283,6 +303,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         if(gpsTracker.canGetLocation()){
             latitude = gpsTracker.getLatitude();
             longitude = gpsTracker.getLongitude();
+            currentLocation.setLatitude(latitude);
+            currentLocation.setLongitude(longitude);
         }else{
             gpsTracker.showSettingsAlert();
         }

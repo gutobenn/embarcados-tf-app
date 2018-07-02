@@ -76,6 +76,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private View mRelativeLayout;
     private String lat;
     private String lng;
+    private String distance;
 
 
     @Override
@@ -99,6 +100,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         compraId = intent.getStringExtra(MainActivity.ID_TO_VIEW_MSG);
+        distance = intent.getStringExtra(MainActivity.ID_DISTANCE);
     }
 
     @Override
@@ -201,7 +203,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
 
             String address = ((JSONObject) response).getJSONObject("data").getString
                     ("address");
-            mAddress.setText(address);
+            mAddress.setText(address + " (" + String.valueOf(distance)+ "km)");
             lat = (((JSONObject) response).getJSONObject("data").getString
                         ("latitude"));
             lng = (((JSONObject) response).getJSONObject("data").getString
@@ -259,6 +261,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mRelativeLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
 
     public void buyCotas(View view) {
         Intent intent = new Intent(ViewCompraActivity.this, buyCotasActivity.class);
