@@ -64,11 +64,13 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private TextView mAddress;
     private TextView mUser;
     private TextView mEnd;
+    private TextView mStatus;
     private Button mButton;
     private RequestQueue mQueue;
     private String compraId;
     private ImageView mPicture;
     private View mProgressView;
+    private View mRelativeLayout
     private String lat;
     private String lng;
 
@@ -87,6 +89,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mPicture = (ImageView) findViewById(R.id.picture);
         mProgressView = findViewById(R.id.load_progress);
+        mStatus = findViewById(R.id.status);
+        mRelativeLayout = findViewById(R.id.relativelayout);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -142,6 +146,29 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
                     ("description"));
             mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getJSONObject("data").getString
                     ("price_per_quota"))));
+            mUser.setText(((JSONObject) response).getJSONObject("data").getString
+                    ("user_email"));
+
+            switch (((JSONObject) response).getJSONObject("data").getString
+                    ("status")) {
+                case "1":
+                    mStatus.setText("Pedido em Aberto");
+                    mStatus.setTextColor(Color.rgb(0, 128, 0));
+                    break;
+                case "2":
+                    mStatus.setText("Aguardando Pedido");
+                    mStatus.setTextColor(Color.DKGRAY);
+                    break;
+                case "3":
+                    mStatus.setText("Aguardando Entrega");
+                    mStatus.setTextColor(Color.YELLOW);
+                    break;
+                case "4":
+                    mStatus.setText("Disponível para Retirada");
+                    mStatus.setTextColor(Color.RED);
+                    break;
+            }
+
 
 
             JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
@@ -156,7 +183,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             Date endDate = dateFormat.parse(((JSONObject) response).getJSONObject("data").getString(
                     ("end")));
-            mEnd.setText(endDate.toString());
+            DateFormat dateFormat2 = new SimpleDateFormat("dd/MM");
+            mEnd.setText("Até " + dateFormat2.format(endDate));
 
             String address = ((JSONObject) response).getJSONObject("data").getString
                     ("address");
@@ -195,6 +223,15 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
+            mRelativeLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRelativeLayout.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mRelativeLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
@@ -207,6 +244,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mRelativeLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 }

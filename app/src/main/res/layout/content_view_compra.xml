@@ -25,6 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
+        android:id="@+id/relativelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,6 +33,7 @@
             android:id="@+id/swiperefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -47,6 +49,7 @@
                         android:id="@+id/picture"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
                         android:adjustViewBounds="true"
                         android:scaleType="fitEnd"
                         app:srcCompat="@android:color/background_light" />
@@ -58,43 +61,72 @@
                         android:layout_marginBottom="15dp"
                         android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/priceQuota"
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="24sp" />
+                        android:layout_height="wrap_content" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/priceQuota"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/mdtp_accent_color_dark"
+                            android:textSize="26sp" />
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="6dp"
+                            android:text="/ cota" />
+
+                        <Button
+                            android:id="@+id/status"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1" />
+                    </TableRow>
 
                     <TextView
                         android:id="@+id/end"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
-                        android:textSize="15sp" />
+                        android:drawableLeft="@drawable/baseline_date_range_black_24"
+                        android:drawablePadding="8dp"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
+                        android:drawableLeft="@drawable/baseline_place_black_24"
+                        android:drawablePadding="8dp"
                         android:onClick="openMap"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="14sp" />
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/user"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
-                        android:text="Esta compra está sendo organizada por João"
-                        android:textSize="15sp" />
+                        android:drawableLeft="@drawable/baseline_person_black_24"
+                        android:drawablePadding="8dp"
+                        android:textSize="16sp" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </ScrollView>
         </android.support.v4.widget.SwipeRefreshLayout>
