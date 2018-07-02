@@ -146,9 +146,10 @@ public class newCompraActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mTextView.setText("Erro ao cadastrar");
+                    //mTextView.setText("Erro ao cadastrar");
+                    Toast.makeText(newCompraActivity.this, "Erro ao cadastrar!", Toast.LENGTH_SHORT).show();
                 }
-            }); // TODO Toast?
+            });
 
             sr.setRetryPolicy(new DefaultRetryPolicy(5000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

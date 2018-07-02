@@ -3,58 +3,33 @@ package com.truiton.volleyexample;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -72,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signup);
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
@@ -159,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                         .getRequestQueue();
 
-                String url = "https://ccapi.florescer.xyz/api/v1/auth/sign_in/";
+                String url = "https://ccapi.florescer.xyz/api/v1/auth/";
                 JSONObject jsonParams = new JSONObject();
 
                 jsonParams.put("email", email);
@@ -180,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("uid", headers.getString("uid"));
                             editor.apply();
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         } catch (Exception e){
@@ -191,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         showProgress(false);
-                        Toast.makeText(LoginActivity.this, "Não foi possível conectar. Verifique se os dados inseridos estão corretos", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpActivity.this, "Este e-mail já está sendo utilizado!", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -247,7 +222,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -276,7 +250,7 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -292,10 +266,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void openSignUp(View v) {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 }
 
