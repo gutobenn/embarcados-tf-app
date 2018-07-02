@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private Context mContext = MainActivity.this;
     private static final String TAG = "MainActivity";
     private static final int ACTIVITY_NUM = 0;
+    private EditText userInputDialogEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +121,14 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                         .setCancelable(false)
                         .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                             @SuppressLint("MissingPermission")
-                            public void onClick(DialogInterface dialogBox, int id) {
-                                radius =  Float.parseFloat(userInputDialogEditText.getText().toString());
+                            
+                            public void onClick(DialogInterface dialogBox, final int id) {
+
+                                try {
+                                    radius =  Float.parseFloat(userInputDialogEditText.getText().toString());
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                                 try {
                                     if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
@@ -137,10 +144,13 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                                 //longitude = location.getLongitude();
                                 //latitude = location.getLatitude();
                                 getLocation();
-                                Log.d("MainActivity", Float.toString(radius));
-                                Log.d("MainActivity", Double.toString(longitude));
-                                Log.d("MainActivity", Double.toString(latitude));
-
+                                try {
+                                    Log.d("MainActivity", Float.toString(radius));
+                                    Log.d("MainActivity", Double.toString(longitude));
+                                    Log.d("MainActivity", Double.toString(latitude));
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                             }
                         })
