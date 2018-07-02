@@ -70,7 +70,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private String compraId;
     private ImageView mPicture;
     private View mProgressView;
-    private View mRelativeLayout
+    private View mRelativeLayout;
     private String lat;
     private String lng;
 

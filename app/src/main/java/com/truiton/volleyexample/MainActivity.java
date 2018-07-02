@@ -20,14 +20,28 @@
 
 package com.truiton.volleyexample;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,6 +69,22 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private RequestQueue mQueue;
     List<Compra> compras = new ArrayList<>();
 
+    private Activity mActivity = this;
+
+    private FloatingActionButton mFloatingActionButton;
+    final Context c = this;
+
+    private float radius;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Location currentBestLocation = null;
+
+    private GpsTracker gpsTracker;
+
+    private double longitude;
+    private double latitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +92,58 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
         mTextView = (TextView) findViewById(R.id.textView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.openUserInputDialog);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
+                View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
+                AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(c);
+                alertDialogBuilderUserInput.setView(mView);
+
+                final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
+                alertDialogBuilderUserInput
+                        .setCancelable(false)
+                        .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                            @SuppressLint("MissingPermission")
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                radius =  Float.parseFloat(userInputDialogEditText.getText().toString());
+
+                                try {
+                                    if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                                        ActivityCompat.requestPermissions(mActivity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
+                                //LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                                //@SuppressLint("MissingPermission") Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                //longitude = location.getLongitude();
+                                //latitude = location.getLatitude();
+                                getLocation();
+                                Log.d("MainActivity", Float.toString(radius));
+                                Log.d("MainActivity", Double.toString(longitude));
+                                Log.d("MainActivity", Double.toString(latitude));
+
+
+                            }
+                        })
+
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogBox, int id) {
+                                        dialogBox.cancel();
+                                    }
+                                });
+
+                AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+                alertDialogAndroid.show();
+            }
+        });
     }
 
     @Override
@@ -145,6 +227,17 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public void newCompra(View view) {
         Intent intent = new Intent(this, newCompraActivity.class);
         startActivity(intent);
+
+    }
+
+    public void getLocation(){
+        gpsTracker = new GpsTracker(MainActivity.this);
+        if(gpsTracker.canGetLocation()){
+            latitude = gpsTracker.getLatitude();
+            longitude = gpsTracker.getLongitude();
+        }else{
+            gpsTracker.showSettingsAlert();
+        }
     }
 
 }
