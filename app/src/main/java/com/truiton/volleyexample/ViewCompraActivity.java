@@ -22,13 +22,16 @@ package com.truiton.volleyexample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,16 +51,21 @@ import java.util.Date;
 public class ViewCompraActivity extends AppCompatActivity implements Response.Listener,
         Response.ErrorListener {
     public static final String REQUEST_TAG = "ViewCompraActivity";
+    public static final String ID_LAT = "com.truiton.volleyexample.ID_LAT";
+    public static final String ID_LNG = "com.truiton.volleyexample.ID_LNG";
     SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mTextView;
     private TextView mPriceQuota;
     private TextView mDescription;
+    private TextView mAddress;
     private TextView mUser;
     private TextView mEnd;
     private Button mButton;
     private RequestQueue mQueue;
     private String compraId;
     private ImageView mPicture;
+    private String lat;
+    private String lng;
 
 
     @Override
@@ -68,6 +76,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mTextView = (TextView) findViewById(R.id.textView);
         mDescription = (TextView) findViewById(R.id.description);
         mPriceQuota = (TextView) findViewById(R.id.priceQuota);
+        mAddress = (TextView) findViewById(R.id.address);
         mUser = (TextView) findViewById(R.id.user);
         mEnd = (TextView) findViewById(R.id.end);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
@@ -122,19 +131,43 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
                     ("description"));
             mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getJSONObject("data").getString
                     ("price_per_quota"))));
+
+
+            JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
+            String imgPath = picEl.getString("url");
+            if (imgPath == "null" || imgPath == null) {
+                mPicture.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+            } else {
+                String url = "https://ccapi.florescer.xyz" + imgPath;
+                GlideApp.with(ViewCompraActivity.this).load(url).into(mPicture);
+            }
+
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             Date endDate = dateFormat.parse(((JSONObject) response).getJSONObject("data").getString(
                     ("end")));
             mEnd.setText(endDate.toString());
 
-            JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
-            String imgPath = picEl.getString("url");
-            if (imgPath != "null") {
-                String url = "https://ccapi.florescer.xyz" + imgPath;
-                GlideApp.with(ViewCompraActivity.this).load(url).into(mPicture);
+            String address = ((JSONObject) response).getJSONObject("data").getString
+                    ("address");
+            mAddress.setText(address);
+            lat = (((JSONObject) response).getJSONObject("data").getString
+                        ("latitude"));
+            lng = (((JSONObject) response).getJSONObject("data").getString
+                        ("longitude"));
+            if (address == "null" || lat == "null" || lng == "null" ) {
+                mAddress.setTextColor(Color.BLACK);
+                mAddress.setOnClickListener(null);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void openMap(View v){
+        Intent intent = new Intent(ViewCompraActivity.this, MapsActivity.class);
+        intent.putExtra(ID_LAT, lat);
+        intent.putExtra(ID_LNG, lng);
+        startActivity(intent);
     }
 }
