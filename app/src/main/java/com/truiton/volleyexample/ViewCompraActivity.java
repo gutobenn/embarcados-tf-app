@@ -20,11 +20,12 @@
 
 package com.truiton.volleyexample;
 
-import android.content.Context;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
@@ -36,10 +37,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -114,6 +112,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mTextView.setText(error.getMessage());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onResponse(Object response) {
         try {
@@ -138,4 +137,5 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             e.printStackTrace();
         }
     }
+
 }

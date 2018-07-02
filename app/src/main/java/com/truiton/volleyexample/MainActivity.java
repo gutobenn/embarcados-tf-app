@@ -20,14 +20,17 @@
 
 package com.truiton.volleyexample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,13 +59,21 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private RequestQueue mQueue;
     List<Compra> compras = new ArrayList<>();
 
+    private Context mContext = MainActivity.this;
+    private static final String TAG = "MainActivity";
+    private static final int ACTIVITY_NUM = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(TAG, "onCreate: starting.");
+
         mTextView = (TextView) findViewById(R.id.textView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+
+        setupBottomNavigationView();
     }
 
     @Override
@@ -145,6 +157,16 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public void newCompra(View view) {
         Intent intent = new Intent(this, newCompraActivity.class);
         startActivity(intent);
+    }
+
+    private void setupBottomNavigationView(){
+        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
     }
 
 }
