@@ -14,7 +14,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/form"
@@ -140,8 +144,10 @@
                     android:id="@+id/endField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
                     android:hint="Prazo *"
-                    android:inputType="datetime"
+                    android:inputType="none"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -199,12 +205,6 @@
             android:textColor="#ffffff"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="209dp" />
-
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"></Button>
     </LinearLayout>
 
     <TextView

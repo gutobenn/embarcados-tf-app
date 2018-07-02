@@ -56,23 +56,15 @@ public class newCompraActivity extends AppCompatActivity {
     private TextView mAddress;
     private Button mButton;
     private RequestQueue mQueue;
-    private Button botao;
     private Bitmap bitmap;
     private View mProgressView;
     private View mFormView;
+    private String finalDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_compra);
-
-        botao = (Button) findViewById(R.id.btn);
-        botao.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (v == botao)
-                    showDialog(DATE_DIALOG_ID);
-            }
-        });
 
         mName = (TextView) findViewById(R.id.nameField);
         mDescription = (TextView) findViewById(R.id.descriptionField);
@@ -85,6 +77,15 @@ public class newCompraActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.result);
         mProgressView = findViewById(R.id.submit_progress);
         mFormView = findViewById(R.id.form);
+
+        mEnd.setKeyListener(null);
+        mEnd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v == mEnd)
+                    showDialog(DATE_DIALOG_ID);
+            }
+        });
+
 
         bitmap = null;
     }
@@ -136,7 +137,7 @@ public class newCompraActivity extends AppCompatActivity {
                 jsonParams.put("max_number_of_quotas", mMaxQuota.getText().toString());
                 jsonParams.put("price_per_quota", mPriceQuota.getText().toString());
                 jsonParams.put("address", mAddress.getText().toString());
-                jsonParams.put("end", mEnd.getText().toString());
+                jsonParams.put("end", finalDate);
                 jsonParams.put("status", "1");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -214,11 +215,13 @@ public class newCompraActivity extends AppCompatActivity {
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year, int monthOfYear,
                                       int dayOfMonth) {
-                    String data = String.valueOf(dayOfMonth) + " /"
-                            + String.valueOf(monthOfYear+1) + " /" + String.valueOf(year);
-                    Toast.makeText(newCompraActivity.this,
-                            "DATA = " + data, Toast.LENGTH_SHORT)
-                            .show();
+                    String month = (monthOfYear+1 < 10) ? "0" + String.valueOf(monthOfYear+1) : String.valueOf(monthOfYear+1);
+                    String day = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+                    finalDate = String.valueOf(year) + "-" + month + "-" + day + " 23:59:59";
+
+                    String data = String.valueOf(dayOfMonth) + "/"
+                            + String.valueOf(monthOfYear+1) + "/" + String.valueOf(year);
+                    mEnd.setText(data);
                 }
             };
 
