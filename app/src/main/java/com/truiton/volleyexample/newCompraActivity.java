@@ -136,7 +136,7 @@ public class newCompraActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     try {
                         Intent intent = new Intent(newCompraActivity.this, ViewCompraActivity.class);
-                        intent.putExtra(ID_TO_VIEW_MSG, ((JSONObject) response).getString("id"));
+                        intent.putExtra(ID_TO_VIEW_MSG, ((JSONObject) response).getJSONObject("data").getString("id"));
                         startActivity(intent);
                         finish(); // proibe de voltar para essa activity ao apertar o botao de retorno
                     } catch (JSONException e) {

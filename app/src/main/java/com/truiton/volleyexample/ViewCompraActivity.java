@@ -117,21 +117,20 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     @Override
     public void onResponse(Object response) {
         try {
-            setTitle(((JSONObject) response).getString("name"));
-            mDescription.setText(((JSONObject) response).getString
+            setTitle(((JSONObject) response).getJSONObject("data").getString("name"));
+            mDescription.setText(((JSONObject) response).getJSONObject("data").getString
                     ("description"));
-            mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getString
+            mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getJSONObject("data").getString
                     ("price_per_quota"))));
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-            Date endDate = dateFormat.parse(((JSONObject) response).getString(
+            Date endDate = dateFormat.parse(((JSONObject) response).getJSONObject("data").getString(
                     ("end")));
             mEnd.setText(endDate.toString());
 
-            JSONObject picEl = (JSONObject) ((JSONObject) response).get("picture");
+            JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
             String imgPath = picEl.getString("url");
             if (imgPath != "null") {
                 String url = "https://ccapi.florescer.xyz" + imgPath;
-                Toast.makeText(ViewCompraActivity.this, ((CharSequence) url), Toast.LENGTH_LONG).show();
                 GlideApp.with(ViewCompraActivity.this).load(url).into(mPicture);
             }
         } catch (Exception e) {
