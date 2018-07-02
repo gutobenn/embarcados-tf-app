@@ -36,17 +36,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                         .setCancelable(false)
                         .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                             @SuppressLint("MissingPermission")
-                            
+
                             public void onClick(DialogInterface dialogBox, final int id) {
 
                                 try {
@@ -164,8 +164,41 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                                     }
                                 });
 
-                AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+                final AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+
                 alertDialogAndroid.show();
+
+                ((AlertDialog) alertDialogAndroid).getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setEnabled(false);
+
+                userInputDialogEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before,
+                                              int count) {
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // Check if edittext is empty
+                        if (TextUtils.isEmpty(s)) {
+                            // Disable ok button
+                            ((AlertDialog) alertDialogAndroid).getButton(
+                                    alertDialogAndroid.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            // Something into edit text. Enable the button.
+                            ((AlertDialog) alertDialogAndroid).getButton(
+                                    alertDialogAndroid.BUTTON_POSITIVE).setEnabled(true);
+                        }
+
+                    }
+                });
+
+
             }
         });
         setupBottomNavigationView();
