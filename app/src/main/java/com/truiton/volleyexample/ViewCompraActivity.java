@@ -53,7 +53,12 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     public static final String REQUEST_TAG = "ViewCompraActivity";
     public static final String ID_LAT = "com.truiton.volleyexample.ID_LAT";
     public static final String ID_LNG = "com.truiton.volleyexample.ID_LNG";
+    public static final String ID_QUOTAS = "com.truiton.volleyexample.ID_QUOTAS";
+    public static final String ID_TO_BUY_MSG = "com.truiton.volleyexample.ID_TO_BUY_MSG";
+    public static final String ID_NAME = "com.truiton.volleyexample.ID_NAME";
     SwipeRefreshLayout mSwipeRefreshLayout;
+    private String productName;
+    private String priceQuotas;
     private TextView mTextView;
     private TextView mPriceQuota;
     private TextView mDescription;
@@ -81,6 +86,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mEnd = (TextView) findViewById(R.id.end);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mPicture = (ImageView) findViewById(R.id.picture);
+        mButton = (Button) findViewById(R.id.buyButton);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -126,11 +132,14 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     @Override
     public void onResponse(Object response) {
         try {
-            setTitle(((JSONObject) response).getJSONObject("data").getString("name"));
+            productName = ((JSONObject) response).getJSONObject("data").getString("name");
+            setTitle(productName);
+
             mDescription.setText(((JSONObject) response).getJSONObject("data").getString
                     ("description"));
-            mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(((JSONObject) response).getJSONObject("data").getString
-                    ("price_per_quota"))));
+
+            priceQuotas = ((JSONObject) response).getJSONObject("data").getString("price_per_quota");
+            mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(priceQuotas)));
 
 
             JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
@@ -168,6 +177,15 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         Intent intent = new Intent(ViewCompraActivity.this, MapsActivity.class);
         intent.putExtra(ID_LAT, lat);
         intent.putExtra(ID_LNG, lng);
+        startActivity(intent);
+    }
+
+    public void buyCotas(View view) {
+        Intent intent = new Intent(ViewCompraActivity.this, buyCotasActivity.class);
+        intent.putExtra(ID_TO_BUY_MSG, compraId);
+        intent.putExtra(ID_QUOTAS, priceQuotas);
+        intent.putExtra(ID_NAME, productName);
+
         startActivity(intent);
     }
 }

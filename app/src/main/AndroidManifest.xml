@@ -37,6 +37,9 @@
             android:name=".MainActivity"
             android:label="@string/app_name"></activity>
         <activity
+            android:name=".buyCotasActivity"
+            android:label="Comprar Cotas"></activity>
+        <activity
             android:name=".ViewCompraActivity"
             android:label="@string/title_activity_view_compra"
             android:parentActivityName=".MainActivity">

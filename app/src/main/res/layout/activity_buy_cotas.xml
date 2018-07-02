@@ -9,8 +9,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ViewCompraActivity"
-    tools:showIn="@layout/activity_view_compra">
+    tools:context=".buyCotasActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,21 +30,6 @@
                     tools:layout_editor_absoluteX="0dp"
                     tools:layout_editor_absoluteY="0dp">
 
-                    <ImageView
-                        android:id="@+id/picture"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitEnd"
-                        app:srcCompat="@android:color/background_light" />
-
-                    <TextView
-                        android:id="@+id/description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:textSize="18sp" />
-
                     <TextView
                         android:id="@+id/priceQuota"
                         android:layout_width="match_parent"
@@ -53,22 +37,6 @@
                         android:layout_marginBottom="20dp"
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="24sp" />
-
-                    <TextView
-                        android:id="@+id/end"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:onClick="openMap"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/user"
@@ -84,6 +52,31 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/numQuotasField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Quantas cotas deseja comprar?"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+                        <TextView
+                            android:id="@+id/total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:textColor="@android:color/holo_blue_dark"
+                            android:textSize="24sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
                     <Button
                         android:id="@+id/buyButton"
                         android:layout_width="match_parent"
@@ -91,6 +84,7 @@
                         android:background="?android:attr/colorAccent"
                         android:onClick="buyCotas"
                         android:text="Comprar Cotas" />
+
                 </LinearLayout>
             </ScrollView>
         </android.support.v4.widget.SwipeRefreshLayout>
