@@ -23,12 +23,12 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="202dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
@@ -73,23 +73,24 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="Ainda não tem conta? "
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openSignUp"
+                android:text="Cadastre-se"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="18sp" />
+
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ainda não tem conta? "
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="openSignUp"
-        android:text="Cadastre-se"
-        android:textColor="@android:color/holo_blue_light"
-        android:textSize="18sp" />
 
 </LinearLayout>

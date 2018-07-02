@@ -14,6 +14,7 @@
     <string name="prompt_password">Senha</string>
     <string name="action_sign_in">Entrar</string>
     <string name="action_sign_in_short">Entrar</string>
+    <string name="action_sign_up_short">Cadastrar</string>
     <string name="error_invalid_email">E-mail inválido</string>
     <string name="error_invalid_password">Senha muito curta</string>
     <string name="error_incorrect_password">Senha inválida</string>

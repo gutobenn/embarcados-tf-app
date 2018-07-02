@@ -8,7 +8,16 @@
     android:paddingRight="16dp"
     tools:context=".newCompraActivity">
 
+    <ProgressBar
+        android:id="@+id/submit_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="16dp" />
+
     <LinearLayout
+        android:id="@+id/form"
         android:layout_width="356dp"
         android:layout_height="498dp"
         android:layout_marginTop="16dp"
@@ -28,8 +37,8 @@
                     android:id="@+id/nameField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
                     android:hint="Nome *"
+                    android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -63,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-              <android.support.design.widget.TextInputLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -71,8 +80,8 @@
                     android:id="@+id/priceQuotaField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
                     android:hint="Preço por cota * R$"
+                    android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -91,8 +100,8 @@
                     android:id="@+id/minQuotaField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
                     android:hint="Mínimo de quotas *"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -111,8 +120,8 @@
                     android:id="@+id/maxQuotaField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
                     android:hint="Máximo de quotas"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -131,8 +140,8 @@
                     android:id="@+id/endField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="datetime"
                     android:hint="Prazo *"
+                    android:inputType="datetime"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -152,8 +161,8 @@
                     android:id="@+id/addressField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
                     android:hint="Endereço de Retirada *"
+                    android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -163,7 +172,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/imageButton"
