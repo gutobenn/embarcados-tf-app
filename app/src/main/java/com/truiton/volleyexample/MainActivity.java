@@ -49,6 +49,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private FloatingActionButton mFloatingActionButton;
     final Context c = this;
 
-    private float radius;
+    private Float radius;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -88,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     private GpsTracker gpsTracker;
 
-    private double longitude;
-    private double latitude;
+    private Double longitude;
+    private Double latitude;
 
     private Context mContext = MainActivity.this;
     private static final String TAG = "MainActivity";
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                                     Log.d("MainActivity", Float.toString(radius));
                                     Log.d("MainActivity", Double.toString(longitude));
                                     Log.d("MainActivity", Double.toString(latitude));
+                                    loadCompras();
                                 } catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -172,21 +174,11 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     @Override
     protected void onStart() {
         super.onStart();
-        // Instantiate the RequestQueue.
-        mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
-                .getRequestQueue();
-        String url = "https://ccapi.florescer.xyz/api/v1/compras";
-        final CustomJSONArrayRequest jsonRequest = new CustomJSONArrayRequest(Request.Method
-                .GET, url,
-                new JSONArray(), this, this);
-        jsonRequest.setTag(REQUEST_TAG);
-
-        mQueue.add(jsonRequest);
-
+        loadCompras();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mQueue.add(jsonRequest);
+                loadCompras();
                 mSwipeRefreshLayout.setRefreshing(false); // TODO na real nao ta no lugar certo acho, mas visualmente até parece que funciona
             }
         });
@@ -271,6 +263,30 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
+    }
+
+    private void loadCompras(){
+        try {
+            // Instantiate the RequestQueue.
+            mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
+                    .getRequestQueue();
+
+            String url = "https://ccapi.florescer.xyz/api/v1/compras";
+
+            if (radius != null) {
+                url = "https://ccapi.florescer.xyz/api/v1/compras?latitude=" + String.valueOf(latitude) + "&longitude=" + String.valueOf(longitude) + "&radius=" + String.valueOf(radius);
+            }
+
+            final CustomJSONArrayRequest jsonRequest = new CustomJSONArrayRequest(Request.Method
+                    .GET, url,
+                    new JSONArray(), this, this);
+            jsonRequest.setTag(REQUEST_TAG);
+
+            mQueue.add(jsonRequest);
+
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Erro ao carregar compras", Toast.LENGTH_LONG).show();
+        }
     }
 
 }
