@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    tools:context=".newCompraActivity">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="0dp"
+    tools:context=".newCompraActivity"
+    android:background="#FFFFFF">
 
     <ProgressBar
         android:id="@+id/submit_progress"
@@ -206,6 +209,7 @@
         </LinearLayout>
 
     </ScrollView>
+    <include layout="@layout/layout_bottom_navigation_view" />
 
     <TextView
         android:id="@+id/result"
@@ -215,4 +219,4 @@
         tools:layout_editor_absoluteY="302dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
