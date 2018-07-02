@@ -27,6 +27,8 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,7 +36,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.text.TextWatcher;
 import android.text.Editable;
+import android.widget.Toast;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -43,6 +50,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
 
@@ -58,7 +66,8 @@ public class buyCotasActivity extends AppCompatActivity {
     private String compraId;
     private String priceQuota;
     private String productName;
-    private ImageView mPicture;
+
+    private RequestQueue mQueue;
 
 
     @Override
@@ -69,7 +78,6 @@ public class buyCotasActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.textView);
         mPriceQuota = (TextView) findViewById(R.id.priceQuota);
         mUser = (TextView) findViewById(R.id.user);
-        mUser = (TextView) findViewById(R.id.total);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mNumQuotas = (TextView) findViewById(R.id.numQuotasField);
         mTotal = (TextView) findViewById(R.id.total);
@@ -110,8 +118,57 @@ public class buyCotasActivity extends AppCompatActivity {
         mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(priceQuota)));
     }
 
+    protected boolean fieldsAreValid(){
+        if( TextUtils.isEmpty(mNumQuotas.getText())){
+            mNumQuotas.setError( "Campo obrigatório" );
+            return false;
+        }
+        return true;
+    }
 
-    public void buyCotas(View view) {
-        mTotal.setText(String.format("Você comprou %s cotas", mNumQuotas.getText().toString()));
+    public void submitForm(View view) {
+        if( fieldsAreValid()) {
+            mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
+                    .getRequestQueue();
+
+            String url = "https://ccapi.florescer.xyz/api/v1/quotas/";
+            JSONObject jsonParams = new JSONObject();
+
+            try {
+                jsonParams.put("compra_id", compraId.toString());
+                jsonParams.put("quantity", mNumQuotas.getText().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            CustomJSONObjectRequest sr = new CustomJSONObjectRequest(Request.Method.POST, url, jsonParams, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(buyCotasActivity.this).create();
+                    alertDialog.setTitle("Sucesso");
+                    alertDialog.setMessage(String.format("Você comprou %s cotas", mNumQuotas.getText().toString()));
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    alertDialog.show();; // proibe de voltar para essa activity ao apertar o botao de retorno
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //showProgress(false);
+                    //mTextView.setText("Erro ao cadastrar");
+                    Toast.makeText(buyCotasActivity.this, "Erro ao cadastrar!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            mQueue.add(sr);
+        }
     }
 }
