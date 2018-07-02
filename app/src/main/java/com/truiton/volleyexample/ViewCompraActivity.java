@@ -20,11 +20,15 @@
 
 package com.truiton.volleyexample;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +68,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private RequestQueue mQueue;
     private String compraId;
     private ImageView mPicture;
+    private View mProgressView;
     private String lat;
     private String lng;
 
@@ -81,6 +86,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mEnd = (TextView) findViewById(R.id.end);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mPicture = (ImageView) findViewById(R.id.picture);
+        mProgressView = findViewById(R.id.load_progress);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -90,6 +96,9 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     @Override
     protected void onStart() {
         super.onStart();
+
+        showProgress(true);
+
         // Instantiate the RequestQueue.
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
@@ -126,6 +135,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     @Override
     public void onResponse(Object response) {
         try {
+            showProgress(false);
+
             setTitle(((JSONObject) response).getJSONObject("data").getString("name"));
             mDescription.setText(((JSONObject) response).getJSONObject("data").getString
                     ("description"));
@@ -160,6 +171,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             }
 
         } catch (Exception e) {
+            showProgress(false);
+            Toast.makeText(ViewCompraActivity.this, "Não foi possível carregar a lista de compras", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -169,5 +182,31 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         intent.putExtra(ID_LAT, lat);
         intent.putExtra(ID_LNG, lng);
         startActivity(intent);
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 }
