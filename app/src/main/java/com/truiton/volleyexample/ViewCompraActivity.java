@@ -197,7 +197,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             float boughtQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("bought_quotas"));
             float minQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("min_number_of_quotas"));
             int restQuota = Math.round(minQuota - boughtQuota);
-            if (restQuota < 0) {
+            if (restQuota <= 0) {
                 availableQuota = "O pedido já atingiu o mínimo de cotas!";
             }
             else {
