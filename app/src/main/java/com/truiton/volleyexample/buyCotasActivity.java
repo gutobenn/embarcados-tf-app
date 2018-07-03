@@ -54,6 +54,7 @@ public class buyCotasActivity extends AppCompatActivity {
     private String compraId;
     private String priceQuota;
     private String productName;
+    private String userMail;
 
     private RequestQueue mQueue;
 
@@ -76,8 +77,11 @@ public class buyCotasActivity extends AppCompatActivity {
         compraId = intent.getStringExtra(ViewCompraActivity.ID_TO_BUY_MSG);
         productName = intent.getStringExtra(ViewCompraActivity.ID_NAME);
         priceQuota = intent.getStringExtra(ViewCompraActivity.ID_QUOTAS);
+        userMail = intent.getStringExtra(ViewCompraActivity.ID_USER);
 
         setTitle(productName);
+
+        mUser.setText("Esta compra sendo organizada por " + userMail);
     }
 
     @Override

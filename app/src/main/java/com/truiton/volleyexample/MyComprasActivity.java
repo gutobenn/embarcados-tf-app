@@ -22,6 +22,7 @@ package com.truiton.volleyexample;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -88,7 +91,7 @@ public class MyComprasActivity extends AppCompatActivity implements Response.Lis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_my_compras);
 
         Log.d(TAG, "onCreate: starting.");
 
@@ -171,7 +174,7 @@ public class MyComprasActivity extends AppCompatActivity implements Response.Lis
 
             listaDeCompras.setAdapter(adapter);
 
-/*            listaDeCompras.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listaDeCompras.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position,
                                         long id) {
@@ -185,7 +188,7 @@ public class MyComprasActivity extends AppCompatActivity implements Response.Lis
                     intent.putExtra(ID_DISTANCE, itemDistance);
                     startActivity(intent);
                 }
-            });*/
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

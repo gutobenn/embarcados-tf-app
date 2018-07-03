@@ -57,6 +57,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     public static final String ID_QUOTAS = "com.truiton.volleyexample.ID_QUOTAS";
     public static final String ID_TO_BUY_MSG = "com.truiton.volleyexample.ID_TO_BUY_MSG";
     public static final String ID_NAME = "com.truiton.volleyexample.ID_NAME";
+    public static final String ID_USER = "com.truiton.volleyexample.ID_USER";
     SwipeRefreshLayout mSwipeRefreshLayout;
     private String productName;
     private String priceQuotas;
@@ -79,6 +80,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
 
     private String availableQuota;
     private TextView mAvailable;
+    private String userMail;
 
 
     @Override
@@ -180,6 +182,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
                     break;
             }
 
+            userMail = ((JSONObject) response).getJSONObject("data").getString("user_email");
+
             productName = ((JSONObject) response).getJSONObject("data").getString("name");
             setTitle(productName);
 
@@ -193,7 +197,12 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             float boughtQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("bought_quotas"));
             float minQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("min_number_of_quotas"));
             int restQuota = Math.round(minQuota - boughtQuota);
-            availableQuota = "Faltam " + Integer.toString(restQuota) +" cotas para fechar o pedido!";
+            if (restQuota < 0) {
+                availableQuota = "O pedido já atingiu o mínimo de cotas!";
+            }
+            else {
+                availableQuota = "Faltam " + Integer.toString(restQuota) + " cotas para fechar o pedido!";
+            }
 
             mAvailable.setText(availableQuota);
 
@@ -279,6 +288,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         intent.putExtra(ID_TO_BUY_MSG, compraId);
         intent.putExtra(ID_QUOTAS, priceQuotas);
         intent.putExtra(ID_NAME, productName);
+        intent.putExtra(ID_USER, userMail);
 
         startActivity(intent);
     }
