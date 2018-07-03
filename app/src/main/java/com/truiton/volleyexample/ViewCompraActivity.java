@@ -23,7 +23,6 @@ package com.truiton.volleyexample;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.icu.text.DateFormat;
@@ -78,6 +77,9 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private String lng;
     private String distance;
 
+    private String availableQuota;
+    private TextView mAvailable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
         mStatus = findViewById(R.id.status);
         mRelativeLayout = findViewById(R.id.relativelayout);
         mButton = (Button) findViewById(R.id.buyButton);
+
+        mAvailable = (TextView) findViewById(R.id.available);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -185,6 +189,13 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
             priceQuotas = ((JSONObject) response).getJSONObject("data").getString("price_per_quota");
             mPriceQuota.setText(String.format("R$%,.2f", Float.parseFloat(priceQuotas)));
 
+
+            float boughtQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("bought_quotas"));
+            float minQuota = Float.parseFloat(((JSONObject) response).getJSONObject("data").getString("min_number_of_quotas"));
+            int restQuota = Math.round(minQuota - boughtQuota);
+            availableQuota = "Faltam " + Integer.toString(restQuota) +" cotas para fechar o pedido!";
+
+            mAvailable.setText(availableQuota);
 
             JSONObject picEl = (JSONObject) ((JSONObject) response).getJSONObject("data").get("picture");
             String imgPath = picEl.getString("url");
