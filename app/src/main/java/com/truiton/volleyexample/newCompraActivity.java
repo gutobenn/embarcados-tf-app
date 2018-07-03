@@ -68,7 +68,7 @@ public class newCompraActivity extends AppCompatActivity {
 
     private Context mContext = newCompraActivity.this;
     private static final String TAG = "newCompraActivity";
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

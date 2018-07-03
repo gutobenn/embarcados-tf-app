@@ -7,13 +7,6 @@
         android:title="">
     </item>
 
-
-    <item
-        android:id="@+id/ic_search"
-        android:icon="@drawable/ic_search"
-        android:title="">
-    </item>
-
     <item
         android:id="@+id/ic_circle"
         android:icon="@drawable/ic_circle"
@@ -21,14 +14,9 @@
     </item>
 
     <item
-        android:id="@+id/ic_alert"
-        android:icon="@drawable/ic_alert"
+        android:id="@+id/ic_shopping_cart"
+        android:icon="@drawable/ic_shopping_cart"
         android:title="">
     </item>
 
-    <item
-        android:id="@+id/ic_display_name"
-        android:icon="@drawable/ic_display_name"
-        android:title="">
-    </item>
 </menu>

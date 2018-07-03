@@ -37,31 +37,18 @@ public class BottomNavigationViewHelper {
                         context.startActivity(intent1);
                         callingActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
-                    /*
-                    case R.id.ic_search:
-                        Intent intent2  = new Intent(context, SearchActivity.class);//ACTIVITY_NUM = 1
-                        context.startActivity(intent2);
-                        callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        break;
-                    */
+
                     case R.id.ic_circle:
                         Intent intent3 = new Intent(context, newCompraActivity.class);//ACTIVITY_NUM = 2
                         context.startActivity(intent3);
                         callingActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
 
-                    case R.id.ic_alert:
+                    case R.id.ic_shopping_cart:
                         Intent intent4 = new Intent(context, MyComprasActivity.class);//ACTIVITY_NUM = 3
                         context.startActivity(intent4);
                         callingActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
-
-                   /* case R.id.ic_android:
-                        Intent intent5 = new Intent(context, MyComprasActivity.class);//ACTIVITY_NUM = 4
-                        context.startActivity(intent5);
-                        callingActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        break;
-*/
                 }
 
 

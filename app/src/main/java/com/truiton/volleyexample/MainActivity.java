@@ -27,8 +27,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -46,6 +44,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -81,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private Activity mActivity = this;
 
     private FloatingActionButton mFloatingActionButton;
+    private Button mButton;
+
     final Context c = this;
 
     private Float radius;
@@ -109,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         mTextView = (TextView) findViewById(R.id.textView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.openUserInputDialog);
+        mButton = (Button) findViewById(R.id.openUserInputDialog);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
