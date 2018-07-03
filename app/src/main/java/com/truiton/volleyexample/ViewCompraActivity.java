@@ -27,15 +27,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +49,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static android.R.layout.simple_list_item_1;
 
 
 public class ViewCompraActivity extends AppCompatActivity implements Response.Listener,
@@ -81,6 +92,8 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
     private String availableQuota;
     private TextView mAvailable;
     private String userMail;
+
+    List<Quota> quotas = new ArrayList<>();
 
 
     @Override
@@ -232,6 +245,31 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
                 mAddress.setTextColor(Color.BLACK);
                 mAddress.setOnClickListener(null);
             }
+
+            quotas.clear();
+            for (int i = 0; i < ((JSONObject) response).getJSONObject("data").getJSONArray("quotas").length(); i++) {
+                try {
+
+                    JSONObject jo = ((JSONObject) response).getJSONObject("data").getJSONArray("quotas").getJSONObject(i);
+                    quotas.add(
+                            new Quota(
+                                    Integer.parseInt(((JSONObject) jo).getString("id")),
+                                    ((JSONObject) jo).getString("user_email"),
+                                    Integer.parseInt(((JSONObject) jo).getString("quantity"))
+                            ));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ListView listaDeQuotas = (ListView) findViewById(R.id.listQuotas);
+
+            ArrayAdapter<Quota> adapter = new ArrayAdapter<Quota>(this,
+                    simple_list_item_1, quotas);
+
+            listaDeQuotas.setAdapter(adapter);
+            //listaDeQuotas.setScrollContainer(false);
+            listaDeQuotas.setNestedScrollingEnabled(true);
 
         } catch (Exception e) {
             showProgress(false);
