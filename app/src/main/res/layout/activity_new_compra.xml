@@ -31,10 +31,10 @@
 
         <LinearLayout
             android:id="@+id/form"
-            android:layout_width="356dp"
-            android:layout_height="498dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="60dp"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp">
 
