@@ -249,11 +249,15 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 try {
                     JSONObject jo = ((JSONArray) response).getJSONObject(i);
                     Location compraDistance = new Location("retirada");
-                    compraDistance.setLatitude(Float.parseFloat(((JSONObject) jo).getString("latitude")));
-                    compraDistance.setLongitude(Float.parseFloat(((JSONObject) jo).getString("longitude")));
+                    float distance = 0;
+                    try{
+                        compraDistance.setLatitude(Float.parseFloat(((JSONObject) jo).getString("latitude")));
+                        compraDistance.setLongitude(Float.parseFloat(((JSONObject) jo).getString("longitude")));
+                        distance = currentLocation.distanceTo(compraDistance) / 1000; // in km
+                    } catch (Exception e) {
 
-                    float distance = currentLocation.distanceTo(compraDistance) / 1000; // in km
-                    Log.e("distanciaa", Float.toString(distance));
+                    }
+
 
                     compras.add(
                             new Compra(
