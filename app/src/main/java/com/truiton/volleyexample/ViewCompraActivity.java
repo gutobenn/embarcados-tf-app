@@ -201,7 +201,7 @@ public class ViewCompraActivity extends AppCompatActivity implements Response.Li
                 availableQuota = "O pedido já atingiu o mínimo de cotas!";
             }
             else {
-                availableQuota = "Faltam " + Integer.toString(restQuota) + " cotas para fechar o pedido!";
+                availableQuota = "Falta " + Integer.toString(restQuota) + " cotas para fechar o pedido!";
             }
 
             mAvailable.setText(availableQuota);

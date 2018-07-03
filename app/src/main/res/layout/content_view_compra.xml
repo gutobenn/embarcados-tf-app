@@ -136,17 +136,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <Button
-                        android:id="@+id/buyButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/colorAccent"
-                        android:onClick="buyCotas"
-                        android:text="Comprar Cotas" />
                 </LinearLayout>
             </ScrollView>
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/newCompraFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:src="@drawable/baseline_add_shopping_cart_white_48"
+            app:fabSize="normal"
+            tools:layout_editor_absoluteX="296dp"
+            tools:layout_editor_absoluteY="423dp"
+            android:onClick="buyCotas"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
